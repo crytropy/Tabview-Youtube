@@ -1,79 +1,45 @@
-name: Generate File
+name: Publish Slim Userscript
 
 permissions:
-  actions: write
-  attestations: write
-  checks: write
   contents: write
-  deployments: write
-  id-token: write
-  issues: read
-  discussions: read
-  packages: read
-  pages: read
-  pull-requests: write
-  repository-projects: read
-  security-events: read
-  statuses: read
 
 on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '**.md'  # Ignore markdown files changes to trigger this workflow
-      - '**.gitignore'
-      - 'LICENSE'
+    paths:
+      - 'userscript/Tabview-Youtube.user.js'
+      - '.github/workflows/generate-file.yml'
+  workflow_dispatch:
 
 jobs:
-  generate:
+  publish:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout main
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Fetch only the last 2 commits to check for changes in version.ini
+          ref: main
+          fetch-depth: 0
 
-      - name: Cache files
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./version.ini
-            ./js/content.js
-            ./userscript/template.js
-          key: files-key-${{ hashFiles('./version.ini', './js/content.js', './userscript/template.js') }}
+      - name: Prepare slim userscript
+        run: cp userscript/Tabview-Youtube.user.js /tmp/Tabview-Youtube.user.js
 
-      - name: Read version
-        run: echo "VERSION=$(cat version.ini)" >> $GITHUB_ENV
-
-      - name: Check if version has changed
-        id: version-check
+      - name: Publish generated-files branch
         run: |
-          git diff --exit-code --quiet HEAD..HEAD^ version.ini || echo "HAS_CHANGED=true" >> $GITHUB_ENV
-
-      - name: Create directory
-        run: mkdir -p generated
-
-      - name: Remove comment and Generate file
-        if: env.HAS_CHANGED == 'true'
-        run: |
-          version="${{ env.VERSION }}"
-          commit_sha=$(git rev-parse HEAD)
-          commit_desc="$(git log -1 --pretty=%B | sed '1d' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-          content_r=$(perl -0777 -pe 's|\s*\/\*[^\*]*(?:(?!\*\/)\*[^\*]*)*\*\/\s*||' js/content.js)
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B generated-files origin/main
-          echo "$content_r" > temp_content.js
-          cp userscript/template.js temp_template.js
-          sed -i "s/{{VERSION}}/$version/g; s/{{COMMIT_SHA}}/$commit_sha/g" temp_template.js
-          sed -i '/{{CONTENT}}/r temp_content.js' temp_template.js
-          sed -i '/{{CONTENT}}/d' temp_template.js
-          rm temp_content.js
-          mv -f temp_template.js generated/Tabview-Youtube.user.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin generated-files || true
+          if git show-ref --verify --quiet refs/remotes/origin/generated-files; then
+            git checkout -B generated-files origin/generated-files
+          else
+            git checkout --orphan generated-files
+            git rm -rf . || true
+          fi
+          mkdir -p generated
+          cp /tmp/Tabview-Youtube.user.js generated/Tabview-Youtube.user.js
           git add generated/Tabview-Youtube.user.js
-          if ! git diff --exit-code --quiet --cached; then
-            git commit -m "UserJS (v$version) | $commit_sha" -m "$commit_desc"
-            git push -f origin generated-files
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish slim Tabview userscript"
+            git push origin generated-files
           fi
