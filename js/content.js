@@ -558,7 +558,7 @@ if (typeof window === 'object') {
   let ytdFlexy = null; // WeakRef
 
   const Q = {}
-  const SETTING_DEFAULT_TAB_0 = "#tab-videos"
+  const SETTING_DEFAULT_TAB_0 = "#tab-comments"
   const settings = {
     defaultTab: SETTING_DEFAULT_TAB_0
   };
