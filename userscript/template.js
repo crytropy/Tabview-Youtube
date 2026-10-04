@@ -154,10 +154,10 @@
 // @description:km        បង្កើតមតិយោបល់និងបញ្ជីទៅជាផ្ទាំងសម្រាប់វីដេអូ YouTube
 
 // @version               {{VERSION}}
-// @resource              contentCSS        https://raw.githubusercontent.com/cyfung1031/Tabview-Youtube/{{COMMIT_SHA}}/css/style_content.css
-// @resource              chatCSS           https://raw.githubusercontent.com/cyfung1031/Tabview-Youtube/{{COMMIT_SHA}}/css/style_chat.css
-// @resource              controlCSS        https://raw.githubusercontent.com/cyfung1031/Tabview-Youtube/{{COMMIT_SHA}}/css/style_control.css
-// @resource              injectionJS1      https://raw.githubusercontent.com/cyfung1031/Tabview-Youtube/{{COMMIT_SHA}}/js/injection_script_1.js
+// @resource              contentCSS        https://raw.githubusercontent.com/crytropy/Tabview-Youtube/{{COMMIT_SHA}}/css/style_content.css
+// @resource              chatCSS           https://raw.githubusercontent.com/crytropy/Tabview-Youtube/{{COMMIT_SHA}}/css/style_chat.css
+// @resource              controlCSS        https://raw.githubusercontent.com/crytropy/Tabview-Youtube/{{COMMIT_SHA}}/css/style_control.css
+// @resource              injectionJS1      https://raw.githubusercontent.com/crytropy/Tabview-Youtube/{{COMMIT_SHA}}/js/injection_script_1.js
 // @require               https://greasyfork.org/scripts/465421-vanilla-js-dialog/code/Vanilla%20JS%20Dialog.js?version=1188332
 
 // @namespace             http://tampermonkey.net/
@@ -168,7 +168,7 @@
 // @match                 https://www.youtube.com/*
 // @exclude               /^https?://\w+\.youtube\.com\/live_chat.*$/
 // @exclude               /^https?://\S+\.(txt|png|jpg|jpeg|gif|xml|svg|manifest|log|ini)[^\/]*$/
-// @icon                  https://raw.githubusercontent.com/cyfung1031/Tabview-Youtube/main/images/icon128p.png
+// @icon                  https://raw.githubusercontent.com/crytropy/Tabview-Youtube/main/images/icon128p.png
 
 // @compatible            edge Edge [Blink] >= 79;                      Tampermonkey (Beta) / Violentmonkey
 // @compatible            chrome Chrome >= 54;                          Tampermonkey (Beta) / Violentmonkey
